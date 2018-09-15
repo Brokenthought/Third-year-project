@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="foundation/css/foundation.css" />
+	<script src="foundation/js/vendor/modernizr.js"></script>
+	<script src="foundation/js/vendor/jquery.js"></script>
+	<script src="foundation/js/foundation/foundation.js"></script>
+	<script src="foundation/js/foundation/foundation.slider.js"></script>
+	<script src="http://d3js.org/d3.v3.js"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+	<link rel="stylesheet" href="styles/style.css">
+	<style type="text/css">
+	</style>
+</head>
+
+<body>
+
+	<!-- Header Area -->
+	<nav class="top-bar" data-topbar role="navigation">
+		<ul class="title-area">
+			<li class="name">
+				<h1><a href="#">Data Visulisation</a></h1>
+			</li>
+			<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+			<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+		</ul>
+		<section class="top-bar-section">
+			<ul class="right">
+				<li><a href="index.html">Introduction</a></li>
+				<li><a href="population.html">Population</a></li>
+				<li ><a href="economy.html">Economy</a></li>
+				<li class="active" ><a href="Industry.html">Industry</a></li>
+		        <li ><a href="jelly.html">Jelly</a></li>
+			</ul>
+		</section>
+	</nav>
+
+	<div class="row">
+		<br>
+
+		<h1>Industry Bublles</h1>
+
+		<!-- Content Area -->
+
+		<div class="large-9 push-3 columns">
+
+			<div id="ireland"></div>
+			<div>
+				<!-- slider -->
+				<div class="range-slider" data-slider data-options="display_selector: #sliderOutput3; start: 1; end:29 ; initial: 1;" id="slider" >
+					<span class="range-slider-handle" role="slider" tabindex="0" ></span>
+					<span class="range-slider-active-segment"></span>
+				</div>
+				<div>
+					<span id="sliderOutput3"></span>
+				</div>
+
+			</div>
+		</div>
+
+
+			<footer class="row">
+				<p>&#169; Copyright The Big V Dog & Grandmaster Finn</p>
+			</footer>
+
+			<script type="text/javascript" src="js/bubles.js"></script>
+			<script src="foundation/js/vendor/jquery.js"></script>
+			<script src="foundation/js/foundation.min.js"></script>
+			<script>
+			$(document).foundation();
+			</script>
+		</body>
+		</html>
