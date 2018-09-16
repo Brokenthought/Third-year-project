@@ -1,20 +1,19 @@
 var array;
 
-var counties = [31, 7, 28,  1,  8, 22,  2, 36, 24,32,14,9 , 3,15,10,19, 25,11,16,9,12,29,4,17,34,26];
+var counties = [31, 7, 28, 1, 8, 22, 2, 36, 24, 32, 14, 9, 3, 15, 10, 19, 25, 11, 16, 9, 12, 29, 4, 17, 34, 26];
+var countyIndex = [];
 var countyNames = ["Carlow","Cavan","Clare","Cork","Donegal","Dublin","Galway","Kerry","Kildare","Kilkenny","Laois","Leitrim","Limerick","Longford","Louth","Mayo","Meath","Monaghan","Offlay","Roscommon","Sligo","Tipperary","Waterford","Westmeath","Wexford","Wicklow"];
-
-var population = [1, 2, 3, 4, 5, 67, 8, 8, ];
 
 var county = 24;
 var year = 1;
-var e = 0;
+
 var category = 7;
 var difference = 12700;
 var division = 18000;
 difference = parseInt(difference);
 division = parseInt(division);
 var dataSet = "Income";
-
+var wait = true;
 
 
 
@@ -24,82 +23,44 @@ var dataSet = "Income";
 document.getElementById("DataSetInfo").innerHTML = "Primary Income (Euro Million)";
 
 
-
 $.ajax({
     url: "json_files/income.json",
     dataType: 'json',
     jsonpCallback: 'MyJSONPCallback',
     success: function (data) {
         array = data;
-
+        wait = false;
     }
 });
 
 $('input:radio[name="pokemon"]').change(function(){
 
-
-
     if($(this).val() == 'DisposableIncome'){
        //alert("SocialBenefits");
        dataSet = "DisposableIncome";
-        category = 11;
-         difference = 370;
-         division = 25000;
-         difference = parseInt(difference);
-         division = parseInt(division);
-         document.getElementById("DataSetInfo").innerHTML = "Disposable Income per Person (Euro)";
+        category = 14;
+
+         document.getElementById("DataSetInfo").innerHTML = "Index of Disposable Income per Person (Euro) State = 100";
     }
     //IncomeSelfEmployed
     else if($(this).val() == 'TaxOnIncome')
     {
        //alert("SocialBenefits");
        dataSet = "TaxOnIncome";
-         category = 8;
-         difference = 74;
-         division = 50;
-         difference = parseInt(difference);
-         division = parseInt(division);
+         category = 11;
+
          document.getElementById("DataSetInfo").innerHTML = "Total Income per Person (Euro)";
 
     }
-
-
 
     else if($(this).val() == 'Income'){
        //alert("Income");
        dataSet = "Income";
        category = 7;
-       difference = 12700;
-       division = 18000;
-       difference = parseInt(difference);
-       division = parseInt(division);
        document.getElementById("DataSetInfo").innerHTML = "Primary Income (Euro Million)";
 
     }
-    else if($(this).val() == 'SocialBenefits'){
-       //alert("SocialBenefits");
-        dataSet = "SocialBenefits";
-         category = 6;
-         difference = 370;
-         division = 10000;
-         difference = parseInt(difference);
-         division = parseInt(division);
-         document.getElementById("DataSetInfo").innerHTML = "Social Benefits and Other Current Transfers (Euro Million)";
-    }
 
-     else if($(this).val() == 'CompensationOfEmplyees')
-    {
-       //alert("SocialBenefits");
-        dataSet = "CompensationOfEmplyees";
-         category = 0;
-         difference = 1;
-         division = 4000;
-         difference = parseInt(difference);
-         division = parseInt(division);
-         document.getElementById("DataSetInfo").innerHTML = "Compensation of Employees (i.e. Wages and Salaries, Benefits in kind)";
-    }
-
-//DisposableIncome
 
 });
 
@@ -110,12 +71,12 @@ $(document).ajaxStop(function () {
     var tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-10, 0])
-    .html(function (d) {
+        .html(function (d) {
 
-        // var id = parseInt(str.slice(1,5);
-        var county = countyId * 24;
-        //console.log(array.dataset.value[county+year+category]+"   "+((array.dataset.value[county+year+category]-difference)/division)*255);
-        return "<strong>" + countyNames[countyId] + ":</strong> <span style='color:red'>"+dataSet+":"+ array.dataset.value[county+year+category] + "</span>";
+        console.log("othereee   "+category);
+        var value = (counties[countyId] * 15) * year + category;
+
+        return "<strong>" + countyNames[countyId] + ":</strong> <span style='color:white'>"  + array.dataset.value[value] +"</span>";
     })
     var num = 0;
 
@@ -146,9 +107,6 @@ $(document).ajaxStop(function () {
 
        .on('mouseover', function () {
 
-
-
-
            countyId = parseInt(d3.select(this).attr("id").substr(d3.select(this).attr("id").indexOf("d") + 1));
            tip.show();
            d3.select(this)
@@ -172,8 +130,45 @@ $(document).ajaxStop(function () {
     $(document).foundation({
         slider: {
             on_change: function () {
+                
+                var value, a,p,k,n, rgb, highest = 0, lowest = 99999999;
+                var sum = 0;
+                var mean = 0;
+                var stDev = 0;
 
-                var year = parseInt( $('#slider').attr(('data-slider'))-2000)*15;
+                year = parseInt($('#slider').attr(('data-slider')) - 1999);
+
+
+
+                for (i = 0; i < counties.length; i++) {
+
+                    value = parseFloat(array.dataset.value[counties[i] * 15 * year + category]);
+
+                    sum += value;
+
+                    if (value > highest) {
+                        highest = value;
+                    }
+                    if (value < lowest) {
+                        lowest = value;
+                    }
+
+
+                }
+                mean = sum / counties.length;
+
+                for (i = 0; i < counties.length; i++) {
+                    value = parseFloat(array.dataset.value[counties[i] * 15 * year + category]);
+                    a = value - mean;
+                    stDev += a * a;
+                }
+
+                stDev = Math.sqrt(stDev / counties.length);
+                k = highest - lowest;
+                n = k / stDev;
+
+                p = 200 / n;
+                
 
                 var count =0;
                 county = 0;
@@ -184,13 +179,17 @@ $(document).ajaxStop(function () {
                     areas.transition().duration(1000)
                     .attr("fill", function (d)
                     {
-                        county = counties[count]*195;
+                        county = counties[count];
                         count++;
 
+                        value = (array.dataset.value[(county * 15) * year + category]);
+               
+                        rgb = ((value - lowest) / stDev) * p;
 
-                        //console.log(array.dataset.value[county+year+category]+"   "+((array.dataset.value[county+year+category]-difference)/division)*255);
-                        //console.log(year + "over here" + county)
-                        return("rgb(200,"+(((array.dataset.value[county+year+category]-difference)/division)*255)+","+(((array.dataset.value[county+year+category]-difference)/division)*255)+")");
+                        blue = rgb + 90;
+                        green = rgb + 40;
+
+                        return ("rgb(" + rgb + "," + green + ", " + blue+")");
 
                     })
                 }
